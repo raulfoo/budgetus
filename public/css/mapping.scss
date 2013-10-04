@@ -1,0 +1,129 @@
+@import "css/mixins";
+
+.counties {
+  fill: none;
+  
+}
+
+
+.states {
+  fill:  none;
+  stroke: #fff;
+  stroke-linejoin: round;
+  
+  
+}
+
+
+#returnZoom{
+  display: none;
+  position: absolute;
+  top: 290px;
+  left: 1145px;
+
+}
+
+.corrTable{
+  font-size: 1.3em;
+  
+    .alignRightTD{
+      padding-left: 8px;
+      text-align: right;
+    }
+
+
+}
+
+#status {
+  p{
+    font-size: 2em;
+    padding: 10px;
+  }
+}
+
+#disclaim{
+  font-style: italic;
+  font-size: .9em;
+  max-width: 200px;
+  float: right;
+  margin-right: 75px;
+  text-align: justify;
+
+}
+.description{
+  display: table;
+  visibility: hidden;
+  
+  font-size: 2em;
+  padding: 0px;
+  min-height: 150px;
+  min-width: 900px;
+  max-width: 900px;
+  
+ 
+  
+
+  #descriptionTableLeft{
+  
+    display: table-cell;
+    .rightAlign{
+      text-align: right;
+    }
+  }
+  
+  #descriptionTableRight{
+    display: table-cell;
+    font-size: .5em;
+    padding-left: 20px;
+    text-align: right;
+   
+  
+  }
+  
+  
+
+}
+
+
+#pop-up {
+  display: none;
+  position:absolute;
+  color: white;
+  font-size: 14px;
+  background: rgba(0,0,0,0.5);
+  padding: 5px 10px 5px 10px;
+  -moz-border-radius: 8px 8px;
+  border-radius: 8px 8px;
+  max-width: 350px;
+
+  
+ 
+  #pop-up-content {
+    font-size: 12px;
+  }
+    #pop-desc {
+      width: 300px;
+      .alignRightTD{
+        padding-left: 8px;
+        text-align: right;
+      }
+    }
+   
+}
+
+#chloroInformation{
+  font-size: 1.2em;
+  position: relative;
+  
+}
+
+
+.q0-9 { fill:rgb(247,251,255); }
+.q1-9 { fill:rgb(222,235,247); }
+.q2-9 { fill:rgb(198,219,239); }
+.q3-9 { fill:rgb(158,202,225); }
+.q4-9 { fill:rgb(107,174,214); }
+.q5-9 { fill:rgb(66,146,198); }
+.q6-9 { fill:rgb(33,113,181); }
+.q7-9 { fill:rgb(8,81,156); }
+.q8-9 { fill:rgb(8,48,107); }

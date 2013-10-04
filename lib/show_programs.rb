@@ -4,6 +4,12 @@ include Graph_Helper
 
 class BudgetUs < Sinatra::Base
 
+  get "/loadGDP" do
+    returnGDP = @gdp.map{|e| e[:gdp]}
+    return returnGDP.to_json
+  
+  end
+
   get "/show_program" do
     graph_type = params[:graph_type]
     unique_id = params[:public_id]
@@ -11,6 +17,11 @@ class BudgetUs < Sinatra::Base
     unique_id = unique_id.to_i
     makeNew = params[:makeNew]
     budget_column = params[:budget_type]
+    if budget_column == "gdp_percent" 
+      budget_column = "budget_percent"
+    end
+    
+   
     
     #select account id column here based on input parameter (1 is the default)
     if defined? params[:nesting]
@@ -57,7 +68,17 @@ class BudgetUs < Sinatra::Base
     
 
   def create_data(find_id,level_column,unique_id,nesting,budget_column,graph_type,makeNew,parent_ids,child_ids)
-
+   
+    p find_id
+    p level_column
+    p unique_id
+    p parent_ids
+    p nesting
+    p budget_column
+    p graph_type
+    p child_ids
+    p makeNew
+    
 
     nesting_column = "account_ids"+nesting.to_s
     unique_id = unique_id.to_i
@@ -70,7 +91,7 @@ class BudgetUs < Sinatra::Base
     end
     parent_ids = parent_ids.to_s.split(",")
     
-    result = UniqueSearch.select(nesting_column.to_sym, :browse_name, :base_level).where(:unique_id =>  [parent_ids,unique_id].flatten).all
+    result = UniqueSearch.select(nesting_column.to_sym, :browse_name, :base_level, :neighbor_ids).where(:unique_id =>  [parent_ids,unique_id].flatten).all
 
     level_array = ["subfunction","agency","bureau","program"]
     search_levels = level_array[(level_array.index(level_column)-parent_ids.size)..(level_array.index(level_column)-1)]
@@ -86,6 +107,7 @@ class BudgetUs < Sinatra::Base
       super_level_find = find_id
     end
     
+    neighbor_find_ids = result.map{|e| e[:neighbor_ids]}.last.split(",")
     parent_level_names = result.map! {|e| e[:browse_name].gsub(/ \(.*\)/,"")}
     parent_level_names.pop
       
@@ -94,9 +116,12 @@ class BudgetUs < Sinatra::Base
     
     parent_level_values = Array.new()
     #select the ones that refer to the specific parent in tree, then loop through each year, and take the relevant data to put in timeline
-    if graph_type == "line" && parent_ids[0].to_i != 0
-     
-      parent_level_values = create_parent_timelines(parents,search_levels,parent_level_values,parent_level_names)
+    
+    
+    #if graph_type == "line" && parent_ids[0].to_i != 0
+    
+    if parent_ids[0].to_i != 0
+      parent_level_values = create_parent_timelines(parents,search_levels,parent_level_values,parent_level_names,budget_column)
      
       parent_branch = UniqueSearch.select(:branch_id, :unique_id).where(:unique_id => parent_ids).all
       parent_branch.map! {|e| e.values}
@@ -118,11 +143,14 @@ class BudgetUs < Sinatra::Base
     
     #---find parents ---
     if graph_type == "bar"
-      output = bar_chart(unique_id,nesting_column,level_column,budget_col)
+     
+      output = bar_chart(unique_id,neighbor_find_ids,nesting_column,level_column,budget_col)
       timeline = output[:timeline]
       timeline_titles = "null"
       timeline_restricted = output[:timeline_restricted]
       timeline_ids = output[:timeline_ids]
+      
+     
     end
     
     
@@ -133,9 +161,44 @@ class BudgetUs < Sinatra::Base
     program_unique = program.collect{|e| e[level_column.to_sym]}.uniq
     
     program_loop = Array.new()
+
+    
+    new_program = Array.new()
+    
     program_unique.each do |unique_level|
+      temp1 = program.select {|e| e[level_column.to_sym] == unique_level}
+      
+      (1980..2015).each do |test|
+        temp = temp1.select {|e| e[:year] == test}
+        
+        if temp.size > 1
+          (1..(temp.size-1)).each do |index|
+            #restrict_add = temp[0][:sum_dollar]/temp[1][:sum_dollar]
+            temp[0][:sum_restricted] = temp[0][:sum]+temp[index][:sum]
+            temp[0][:sum_dollar] = temp[0][:sum_dollar]+temp[index][:sum_dollar]
+            temp[0][:sum_percent] = temp[0][:sum_restricted]
+            temp[0][:sum] = temp[0][:sum_percent]
+            temp[0][:year] = temp[0][:year].to_i
+            
+          end
+          
+          new_program.push temp[0]
+        else
+          new_program.push temp[0]
+        end
+        
+      end
+    end
+   
+    program = new_program
+  
+    
+    program_unique.each do |unique_level|
+  
       program_loop.push(program.select {|e| e[level_column.to_sym] == unique_level})
     end
+    
+   
     
     if parent_name_tree
       unique_div_id_search = parent_name_tree+"-->"#+last
@@ -165,7 +228,7 @@ class BudgetUs < Sinatra::Base
  
     big_output = Array.new() #for the return
     id_index = 0
-    
+ 
     program_loop.each do |program|
     
       if graph_type == "line"
@@ -177,8 +240,14 @@ class BudgetUs < Sinatra::Base
       
       
       
-      current = program.detect{|f| f[:year] == 2012}  
-    
+      
+      
+      
+      #current = program.detect{|f| f[:year] == 2012}  
+      
+      current = program.detect{|f| f[:year] == 2012}
+      
+
       title_string = ''
       string_repeat = 1
       if parent_ids[0].to_i != 0 
@@ -206,7 +275,7 @@ class BudgetUs < Sinatra::Base
       else
         unique_div_id = current_id 
       end
-    
+      
       user_pay = {:title => title_string, :restrict_percent => current[:sum_restricted], :budget_percent =>  current[:sum_percent],  :budget_dollar =>  current[:sum_dollar], :public_id => unique_div_id.to_s+"_divIndex", :is_medicare => current[:is_medicare]}
       timeline_title = Array.new()
       timeline_title = [parent_level_names, end_title].flatten
@@ -218,19 +287,28 @@ class BudgetUs < Sinatra::Base
       end
       
      
+      
       output = {:timeline=> timeline, :timeline_restricted => timeline_restricted, :timeline_ids => timeline_ids, :current => user_pay, :timeline_titles =>  timeline_title, :nesting_level_possible => (parent_level_names.size+1), :nesting_level_current => nesting, :grandparent => grand_parents}  
-      big_output.push(output)
+      
+      #puts "usr pay"
+      #p user_pay
+      if user_pay[:budget_dollar] != 0 
+        "pushing"
+        big_output.push(output)
+      end
       
       id_index+=1
       
     end
+   
+    big_output= big_output.sort_by{|x| x[:current][:restrict_percent]}
     
     return big_output
   end
   
   
   get "/change_graph" do
-  
+    puts "eh just changing graph direct"
     id = params[:id]
     nesting = params[:nesting]
     nesting_column = "account_ids"+nesting
@@ -254,6 +332,7 @@ class BudgetUs < Sinatra::Base
       output = line_chart(id,find_id,nesting_column,level_column,budget_col,parent_level_names,parent_ids)
     else
       find_id = result[:neighbor_ids].split(",")
+     
       #timeline_ids = find_id.collect{|i| i.to_i}.sort
       output = bar_chart(id,find_id,nesting_column,level_column,budget_col)
     end
@@ -263,7 +342,7 @@ class BudgetUs < Sinatra::Base
   end
   
   def bar_chart(unique_id,find_id,nesting_column,level_column,budget_col)
-
+  
     timeline_ids = find_id.collect{|i| i.to_i}.sort
     result = UniqueSearch.select(nesting_column.to_sym, :browse_name).where(:unique_id => find_id).sort_by(&:unique_id)
     
@@ -286,15 +365,18 @@ class BudgetUs < Sinatra::Base
       e.values
     end
     
+  
     output_data = Array.new()
     output_data_r = Array.new()
     names.each do |this_name|
       #order them by unique id
       temp = program.detect {|e| e[level_column.to_sym]==this_name}
+     
       output_data.push [temp[level_column.to_sym],temp[:sum]]
       output_data_r.push [temp[level_column.to_sym],temp[:sum_restricted]]
       
     end
+    
     
     output = {:timeline => output_data, :timeline_titles => "placeHolder", :timeline_ids => timeline_ids, :timeline_restricted => output_data_r}
     
@@ -329,7 +411,7 @@ class BudgetUs < Sinatra::Base
     program = Program.select_group(level_column.to_sym, :year, :is_medicare).select_append{sum(budget_col).as(sum)}.select_append{sum(budget_percent).as(sum_percent)}.select_append{sum(restrict_percent).as(sum_restricted)}.where(:id => find_id).sort_by(&:year)
     
     parent_level_values = Array.new()
-    parent_level_values = create_parent_timelines(parents,search_levels,parent_level_values,parent_level_names)
+    parent_level_values = create_parent_timelines(parents,search_levels,parent_level_values,parent_level_names,budget_column)
    
     
     timeline_out = timeline_output_maker(program,parent_level_values,parent_ids)
@@ -339,6 +421,7 @@ class BudgetUs < Sinatra::Base
     current = program.detect{|f| f[:year] == 2012}  
     timeline_title = [parent_level_names, current[level_column.to_sym]].flatten
     
+  
     output = {:timeline=> timeline, :timeline_titles =>  timeline_title, :timeline_restricted => timeline_restricted, :is_medicare => current[:is_medicare]}  
     return output
 

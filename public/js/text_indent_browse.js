@@ -133,7 +133,10 @@ function clickTree(d) {
 
 
   if(d.aggregate=="true" | d.level =="bureau"){
+    
     findData(String(d.find_id),1,false,null,"budget_percent","line");
+    $("#tabs").fadeOut();
+    $("#hideBrowsing").text("Show Browsing")
   }
   
   if (d.children) {

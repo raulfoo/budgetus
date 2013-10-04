@@ -1,3 +1,4 @@
+var root
 $(document).ready(function(){
 
 var w = 900,
@@ -48,7 +49,7 @@ var plainJSONChildren
 function start(){
   d3.json("json/subfunctionBubble.json", function(json) {
  
-  
+
   root = json;
   mainRoot = root;
   plainJSONChildren = $.extend(true, [], root);
@@ -69,9 +70,9 @@ function start(){
   collapse(plainJSONChildren);
   plainJSONChildren = plainJSONChildren._children
 
-  startLen = root._children.length
-  root._children.splice(0,(subfunctionLevelMin-1))
-  root._children.splice((subfunctionLevelMax),(startLen-subfunctionLevelMax))
+  //startLen = root._children.length
+  //root._children.splice(0,(subfunctionLevelMin-1))
+  //root._children.splice((subfunctionLevelMax),(startLen-subfunctionLevelMax))
   $(".bubbleNavigateSearch").fadeIn();
   update(null);
   
@@ -82,6 +83,7 @@ function start(){
 x = setTimeout(start,1000);
 
 function update(parentString,endId,extend,endLevel,endRadius) {
+  //alert("updating")
   var nodes,
     lastRadius = parseInt(endRadius)
     
@@ -89,11 +91,29 @@ function update(parentString,endId,extend,endLevel,endRadius) {
   
   if(parentString == null || parentString == "top"){
     
+    if(parentString == "top"){
+      root.children =  $.extend(true, [], plainJSONChildren)
+      
+      //console.log(root)
+     
+      startLen = root.children.length
+      subfunctionLevelMin = $("#subfunctionSlider").slider("values")[0]
+      subfunctionLevelMax = $("#subfunctionSlider").slider("values")[1]
+      root.children.splice((subfunctionLevelMax),(startLen-subfunctionLevelMax))
+      root.children.splice(0,(subfunctionLevelMin-1))
+ 
+    }
     nodes = flatten(root);
 
    
   }else{
+    console.log(root)
+    console.log(parentString)
+    console.log(endId)
+    console.log(extend)
+    console.log(endLevel)
     collapse(root)
+    //endId = $("#subfunctionSlider").slider(values)
     nodes = parentTree(root,parentString,endId,extend,endLevel);
     
   }
@@ -116,10 +136,10 @@ function update(parentString,endId,extend,endLevel,endRadius) {
         force
         .nodes(nodes)
         .links(links)
-        .gravity(0)
-        .charge(-500)
+        .gravity(.05)
+        .charge(-15000)
         .linkDistance(function(d,i) {return (100+(((1+Math.random()*1))*(lastRadius)));})
-        .linkStrength(.6)
+        .linkStrength(1)
         .start()
         .on("tick",tick)
      }

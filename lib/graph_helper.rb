@@ -1,7 +1,7 @@
 module Graph_Helper
 
- def create_parent_timelines(parents,search_levels,parent_level_values,parent_level_names)
-  
+ def create_parent_timelines(parents,search_levels,parent_level_values,parent_level_names,graph_type)
+    
     years = parents.collect{|e| e[:year]}.uniq
     
     years.each do |this_year|
@@ -11,7 +11,12 @@ module Graph_Helper
       index = 0
       search_levels.each do |this_parent|
         selects = temp.select{|e| e[this_parent] == parent_level_names[index]}
-        values = selects.collect{|e| e[:sum_percent]}
+        if graph_type == "budget_dollar"
+          values = selects.collect{|e| e[:sum_dollar]}
+        else
+          values = selects.collect{|e| e[:sum_percent]}
+        end
+        
         sum = values.inject(:+)
         #values = temp.map {|e| {:sum => e[budget_column], :sum_restricted => e[:sum_restricted]} 
         values_array.push sum
@@ -21,8 +26,9 @@ module Graph_Helper
         restrict_array.push sum
       index +=1
       end
-      parent_level_values.push ({:sum=>values_array, :sum_restricted => restrict_array})
+        parent_level_values.push ({:sum=>values_array, :sum_restricted => restrict_array})
 
+      
     end
 
     return parent_level_values  
@@ -30,23 +36,25 @@ module Graph_Helper
   
   
   def timeline_output_maker(program,parent_level_values,parent_ids)
-    #p parent_level_values
-    #p program.size
+
     timeline = Array.new()
     timeline_restricted = Array.new()
   
     index = 0
+   
     
     program.each do |year_val|
-
+      
       temp = Array.new()
       temp_r = Array.new()
       temp.push year_val[:year]
+     
       temp_r.push year_val[:year]
-      #puts "it gets here"
-      if parent_ids[0].to_i != 0  
+ 
+      if parent_ids[0].to_i != 0 
+       
         parent_level_values[index][:sum].each do |parent|
-          #puts "also here #{parent}"
+        
           temp.push parent##need to select both here
           #temp_r.push parent[index][:sum_restricted]
         end
@@ -63,6 +71,8 @@ module Graph_Helper
       timeline_restricted.push temp_r
       index +=1
     end
+    
+    
   
     return {:timeline => timeline, :timeline_restricted=> timeline_restricted}
   end

@@ -1,3 +1,4 @@
+var datacheck;
 function drawBarGraph(id,input,titles,taxLevel,type,restrictedArray,timelineIds){
 
 divName = "timeline"+id;
@@ -16,7 +17,10 @@ for(i=0;i<input.length;i++){
 
    if(type=="dollars"){
     output.push(parseFloat(Math.round(temp[1]))/1e6)
-    }else{
+    }else if(type=="gdp_percent"){
+     
+      output.push(temp[j]*100*gdpSize[i]);
+      }else{
   
     output.push(parseFloat(temp[1]*100));
     } 
@@ -38,7 +42,21 @@ if(type=="percent" || type=="budget_percent"){
       
       
         };
-    }
+    }else if(type=="gdp_percent"){
+      var options = {
+        //'focusTarget': 'category'
+        /*'legendPosition': 'newRow',
+        'displayExactValues': true*/
+        vAxis : {title: 'Percent of US GDP', gridlines: {count: 5},  minValue : 0},
+        legend :{position: 'top'},
+        backgroundColor: 'transparent',
+        title : 'Relative to other Spending, 2012',
+        hAxis : {baselineColor : 'black'}
+        
+        
+          };
+        
+      }
     else{
       var options = {
       //'focusTarget': 'category'
@@ -77,10 +95,23 @@ if(type=="percent" || type=="budget_percent"){
       if(e.row == null) {
         return
       }
-    
+      datacheck = data
       percentUse = restrictedArray[e.row][1]  
    
-      output =  "In 2012, "+data.getValue(e.row,0)+" cost you: $"+decimalRound(percentUse*taxLevel)+". Click this column to navigate there.";
+      //output =  "In 2012, "+data.getValue(e.row,0)+" cost you: $"+decimalRound(percentUse*taxLevel)+". Click this column to navigate there.";
+      
+      if(type=="gdp_percent"){
+        output = "In 2012 "+data.getValue(e.row,0)+" was "+decimalRound(data.getValue(e.row,1))+"% of the GDP"//decimalRound(percentUse); //*taxLevel
+
+      }else if(type=="dollars"){
+                output = "In 2012 "+data.getValue(e.row,0)+" costs $"+numberToWords(data.getValue(e.row,1))//+"% of total Government Spending"//decimalRound(percentUse); //*taxLevel
+
+      }
+      else{
+        output = "In 2012 "+data.getValue(e.row,0)+" was "+decimalRound(data.getValue(e.row,1))+"% of total Government Spending"//decimalRound(percentUse); //*taxLevel
+
+      }
+      
       $("#timelineDat"+id).html(output);
     });
     
@@ -106,7 +137,6 @@ function drawLineGraph(id,input,titles,taxLevel,type,restrictedArray,normalBudge
   divName = "timeline"+id;
   var data = new google.visualization.DataTable();
 
- 
   data.addColumn('date', 'Date');
 
   for(j=0;j<titles.length;j++){
@@ -124,19 +154,25 @@ function drawLineGraph(id,input,titles,taxLevel,type,restrictedArray,normalBudge
 
     date = new Date(tempDat,0,1);
     output = new Array(date);
- 
+   
     for(j=0;j<temp.length;j++){
+     
      if(type=="dollars"){
       output.push(Math.round(temp[j])/1e6)
-     }else{
-      output.push(temp[j]*100);
+     }else if(type=="gdp_percent"){
+     
+      output.push(temp[j]*100*gdpSize[i]);
+      }else{
+       output.push(temp[j]*100);
       }
-      
       
     }
     data.addRow(output);
    
   }
+  
+
+  
   
   
   if(type=="percent" || type=="budget_percent"){
@@ -147,6 +183,15 @@ function drawLineGraph(id,input,titles,taxLevel,type,restrictedArray,normalBudge
         title : 'Historical Context 1980-2015',
         hAxis : {baselineColor : 'black'}        
           };
+      }else if(type=="gdp_percent"){
+      var options = {
+        vAxis : {logScale: true, title: 'Percent of US GDP  (Log Scale!)', gridlines: {count: 12}},
+        legend :{position: 'top'},
+        backgroundColor: 'transparent',
+        title : 'Historical Context 1980-2015',
+        hAxis : {baselineColor : 'black'}        
+          };
+      
       }
       else{
         var options = {
@@ -162,7 +207,8 @@ function drawLineGraph(id,input,titles,taxLevel,type,restrictedArray,normalBudge
 
   var annotatedtimeline = new google.visualization.LineChart(
       document.getElementById(divName));
-      
+  
+  dataCheck = data
   annotatedtimeline.draw(data, options);
   //if(type == "percent"){
     google.visualization.events.addListener(annotatedtimeline, 'onmouseover', function(e){
@@ -171,12 +217,24 @@ function drawLineGraph(id,input,titles,taxLevel,type,restrictedArray,normalBudge
         return
       }
       percentUse = restrictedArray[e.row][e.column]  
-      if(normalBudget !="f"){
+      
+      /*if(normalBudget !="f"){
         today = data.getValue(32,e.column)
         mouseDate = data.getValue(e.row,e.column)
         percentUse = percentUse*(mouseDate/today)
+      }*/
+      
+      if(type=="gdp_percent"){
+        output = "In "+data.getValue(e.row,0).getFullYear()+", '"+data.getColumnLabel(e.column)+"' was "+decimalRound(data.getValue(e.row,e.column))+"% of the GDP"//decimalRound(percentUse); //*taxLevel
+
+      }else if(type=="dollars"){
+                output = "In "+data.getValue(e.row,0).getFullYear()+", '"+data.getColumnLabel(e.column)+"' was "+numberToWords(data.getValue(e.row,e.column))//+"% of total Government Spending"//decimalRound(percentUse); //*taxLevel
+
       }
-      output = "In "+data.getValue(e.row,0).getFullYear()+", '"+data.getColumnLabel(e.column)+"' would have cost you: $"+decimalRound(percentUse*taxLevel);
+      else{
+        output = "In "+data.getValue(e.row,0).getFullYear()+", '"+data.getColumnLabel(e.column)+"' was "+decimalRound(data.getValue(e.row,e.column))+"% of total Government Spending"//decimalRound(percentUse); //*taxLevel
+
+      }
       $("#timelineDat"+id).html(output);
     });
     
