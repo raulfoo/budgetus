@@ -61,12 +61,14 @@ $(document).ready(function(){
    
     if($(this).text() == "Hide"){
       console.log("hiding")
-      $(this).closest(".projectLevelWrap").find(".programDataBottomRow").fadeOut();
       $(this).text("View More (Graphs)");
+      $(this).closest(".projectLevelWrap").find(".programDataBottomRow").css("display","none");
+      //$(this).text("View More (Graphs)");
     }else{
       console.log("not hiding")
-      $(this).closest(".projectLevelWrap").find(".programDataBottomRow").fadeIn();
       $(this).text("Hide");
+      $(this).closest(".projectLevelWrap").find(".programDataBottomRow").css("display","");
+      //$(this).text("Hide");
     }
   });
   
