@@ -23,7 +23,7 @@ var visTree = d3.select(".chartTree").append("svg:svg")
     
 
 d3.json("json/treeIndentBrowse.json", function(jsonTree) {
-  alert("what")
+  //alert("what")
   jsonTree.x0 = 0;
   jsonTree.y0 = 0;
   rootTree = jsonTree

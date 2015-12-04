@@ -1,7 +1,7 @@
 var jsonText;
 var temp;
 $(document).ready(function(){
-  alert("yes1?")
+  //alert("yes1?")
 
 
 $.getJSON("/json/wordSearch.json", function(json){

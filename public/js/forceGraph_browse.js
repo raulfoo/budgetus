@@ -1,7 +1,7 @@
 var root
 $(document).ready(function(){
 
-alert("forcegraph")
+//alert("forcegraph")
 
 var w = 900,
     h = 700,

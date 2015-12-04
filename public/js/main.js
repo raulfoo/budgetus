@@ -3,7 +3,7 @@ var annotatedtimeline;
 var gdpSize;
 
 $(document).ready(function(){
-alert("yes?")
+//alert("yes?")
 
    
    $.get("/loadGDP",function(result){
@@ -13,7 +13,7 @@ alert("yes?")
    if($('input[name=income]').val() != null){
     setCookie("income",$('input[name=income]').val(),1);
    }
-   loadCookies();
+   //loadCookies();
    
    $(".programSort").change(function(){
      var level = $(this).attr('id');
@@ -60,7 +60,7 @@ alert("yes?")
   $(".govtProgramsWrapper").on('mousedown', ".seeGraphs", function(){
    
     if($(this).text() == "Hide"){
-       console.log("hiding")
+      console.log("hiding")
       $(this).closest(".projectLevelWrap").find(".programDataBottomRow").fadeOut();
       $(this).text("View More (Graphs)");
     }else{
