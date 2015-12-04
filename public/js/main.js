@@ -58,7 +58,7 @@ $(document).ready(function(){
   });
   
   $(".govtProgramsWrapper").on('mousedown', ".seeGraphs", function(){
-   
+    console.log("triggering")
     if($(this).text() == "Hide"){
       console.log("hiding")
       $(this).text("View More (Graphs)");
