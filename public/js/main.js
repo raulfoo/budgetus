@@ -57,12 +57,14 @@ alert("yes?")
 
   });
   
-  $(".govtProgramsWrapper").on('click', ".seeGraphs", function(){
+  $(".govtProgramsWrapper").on('mousedown', ".seeGraphs", function(){
    
     if($(this).text() == "Hide"){
+       console.log("hiding")
       $(this).closest(".projectLevelWrap").find(".programDataBottomRow").fadeOut();
       $(this).text("View More (Graphs)");
     }else{
+      console.log("not hiding")
       $(this).closest(".projectLevelWrap").find(".programDataBottomRow").fadeIn();
       $(this).text("Hide");
     }
