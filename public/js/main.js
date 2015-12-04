@@ -59,7 +59,8 @@ $(document).ready(function(){
   
   $(".govtProgramsWrapper").on('mousedown', ".seeGraphs", function(){
     console.log("triggering")
-    if($(this).text() == "Hide"){
+    if($(this).closest(".projectLevelWrap").find(".programDataBottomRow").css("display")!="none"){
+    //if($(this).text() == "Hide"){
       console.log("hiding")
       $(this).text("View More (Graphs)");
       $(this).closest(".projectLevelWrap").find(".programDataBottomRow").css("display","none");
@@ -70,6 +71,7 @@ $(document).ready(function(){
       $(this).closest(".projectLevelWrap").find(".programDataBottomRow").css("display","");
       //$(this).text("Hide");
     }
+    alert("pause")
   });
   
   $("#hideBrowsing").click(function(){
