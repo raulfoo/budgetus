@@ -68,7 +68,7 @@ class BudgetUs < Sinatra::Base
     
 
   def create_data(find_id,level_column,unique_id,nesting,budget_column,graph_type,makeNew,parent_ids,child_ids)
-   
+
     p find_id
     p level_column
     p unique_id

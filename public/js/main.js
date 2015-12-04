@@ -3,12 +3,13 @@ var annotatedtimeline;
 var gdpSize;
 
 $(document).ready(function(){
+alert("yes?")
 
+   
    $.get("/loadGDP",function(result){
     gdpSize = JSON.parse(result)
    });
     
-   
    if($('input[name=income]').val() != null){
     setCookie("income",$('input[name=income]').val(),1);
    }
@@ -180,7 +181,6 @@ function continueBrowse(level,data,title){
 }
   
   
-
 function findData(data,nesting,makeNew,child,budgetType,graphType){
   //remove all weird google chart divs they make every time you change anything, maybe this frees up memory
 

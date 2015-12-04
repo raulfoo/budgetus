@@ -16,7 +16,24 @@ delete from cooking_methods;
 
 
 
-copy program_maps from '/Users/raulfoo/Desktop/Projects/Budget_Map/program_level_by_county_complete.txt' delimiters ',' csv;
-copy maps from '/Users/raulfoo/Desktop/Projects/Budget_Map/agencyLevelWithPrograms.txt' delimiters ',' csv;
-copy map_correlations from '/Users/raulfoo/Desktop/Projects/Budget_Map/allCorrelations.txt' delimiters ',' csv;
-copy map_ranges from '/Users/raulfoo/Desktop/Projects/Budget_Map/agencyFundingLevels.txt' delimiters ',' csv;
+copy program_maps from '/var/lib/postgresql/budgetus_tables/program_level_by_county_complete.txt' delimiters ',' csv;
+copy maps from '/var/lib/postgresql/budgetus_tables/agencyLevelWithPrograms.txt' delimiters ',' csv;
+copy map_correlations from '/var/lib/postgresql/budgetus_tables/allCorrelations.txt' delimiters ',' csv;
+copy map_ranges from '/var/lib/postgresql/budgetus_tables/agencyFundingLevels.txt' delimiters ',' csv;
+copy programs from '/var/lib/postgresql/budgetus_tables/BudgetUs_Comprehensive.txt' delimiters ',' csv;
+copy unique_searches from '/var/lib/postgresql/budgetus_tables/Budget_Map/uniqueSearchesAll.txt' delimiters ',' csv;
+copy descriptions from '/var/lib/postgresql/budgetus_tables/Subfunction_descriptions.txt' delimiters ',' csv;
+
+
+
+--on linode the location is '/var/lib/postgresql/budgetus_tables/<table name>
+
+
+--scp program_level_by_county_complete.txt root@budgetus.org:/var/lib/postgresql/budgetus_tables/program_level_by_county_complete.txt
+--scp agencyLevelWithPrograms.txt root@budgetus.org:/var/lib/postgresql/budgetus_tables/agencyLevelWithPrograms.txt
+--scp allCorrelations.txt root@budgetus.org:/var/lib/postgresql/budgetus_tables/allCorrelations.txt
+--scp agencyFundingLevels.txt root@budgetus.org:/var/lib/postgresql/budgetus_tables/agencyFundingLevels.txt
+--scp BudgetUs_Comprehensive.txt root@budgetus.org:/var/lib/postgresql/budgetus_tables/BudgetUs_Comprehensive.txt
+--scp uniqueSearchesAll.txt root@budgetus.org:/var/lib/postgresql/budgetus_tables/uniqueSearchesAll.txt
+--scp Subfunction_descriptions.txt root@budgetus.org:/var/lib/postgresql/budgetus_tables/Subfunction_descriptions.txt
+--maybe missing agency description here---

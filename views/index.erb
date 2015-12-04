@@ -1,5 +1,15 @@
 <% content_for :head do %>
    
+    <script src="http://d3js.org/d3.v3.min.js">
+    
+    
+    
+    
+   
+    
+    
+    </script>
+
     <%= @pinion.js_url("/assets/js/main.js") %>
     <%= @pinion.js_url("/assets/js/search_mechanics.js") %>
     <%= @pinion.js_url("/assets/js/graphing.js") %>
@@ -14,8 +24,7 @@
     <%= @pinion.css_url("/assets/css/tabs.css") %>
     <%= @pinion.css_url("/assets/css/textSearch.css") %>
     <%= @pinion.css_url("/assets/css/forceGraph.css") %>
-   
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+
   
 <% end %>
 
@@ -39,26 +48,26 @@
   <% end %>
   <% if defined? federal_tax %>
   <%= @pinion.js_url("/assets/js/presets.js") %>
-  
-  <input type="hidden" id="federalTaxes" value="<%=federal_tax%>"/>
-  <input type="hidden" id="medicare_tax" value="<%=medicare_tax%>"/>
-  <input type="hidden" id="ss_tax" value="<%=ss_tax%>"/>
-  <input type="hidden" id="totalRevenues" value=1628000000000/>
-
- 
-  <h4 id="stepTwo"> Search for a program that interests you. We've provided some of the big ones</h4>
-  <h4><a id="hideBrowsing">Browse:</a></h4>
-  <%= erb :tab_browse, :layout=> false %>
-  
-  <div class="govtProgramsWrapper">
-  <div>
-    <a id="searching">Searching...</a>
-    <a id="clearAll" onclick=clearAll(false)>Clear All</a>
-  </div>
-    <div class="programsList">
     
+    <input type="hidden" id="federalTaxes" value="<%=federal_tax%>"/>
+    <input type="hidden" id="medicare_tax" value="<%=medicare_tax%>"/>
+    <input type="hidden" id="ss_tax" value="<%=ss_tax%>"/>
+    <input type="hidden" id="totalRevenues" value=1628000000000/>
+  
+   
+    <h4 id="stepTwo"> Search for a program that interests you. We've provided some of the big ones</h4>
+    <h4><a id="hideBrowsing">Browse:</a></h4>
+    <%= erb :tab_browse, :layout=> false %>
+    
+    <div class="govtProgramsWrapper">
+    <div>
+      <a id="searching">Searching...</a>
+      <a id="clearAll" onclick=clearAll(false)>Clear All</a>
     </div>
-  </div>
+      <div class="programsList">
+      
+      </div>
+    </div>
 
   
   <% end %>

@@ -1,6 +1,7 @@
 var jsonText;
 var temp;
 $(document).ready(function(){
+  alert("yes1?")
 
 
 $.getJSON("/json/wordSearch.json", function(json){
@@ -9,6 +10,7 @@ $.getJSON("/json/wordSearch.json", function(json){
 });
 
   $("#searchProgram").keyup(function(e){
+
     data = $(this).val();
     
     
@@ -202,7 +204,6 @@ function getResult(data,search){
       success: function(res) {
        //run the normal browse function with the unique_id provided
         bigOutput = JSON.parse(res);
-        
         if(bigOutput['output'].length>0){
           clearAll(true);
           $("#searchProgram").val(bigOutput['original_search'])

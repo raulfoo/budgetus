@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+
 var wTree = 600,
     hTree = 500,
     iTree = 0,
@@ -22,6 +23,7 @@ var visTree = d3.select(".chartTree").append("svg:svg")
     
 
 d3.json("json/treeIndentBrowse.json", function(jsonTree) {
+  alert("what")
   jsonTree.x0 = 0;
   jsonTree.y0 = 0;
   rootTree = jsonTree

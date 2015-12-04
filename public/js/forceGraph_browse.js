@@ -1,6 +1,8 @@
 var root
 $(document).ready(function(){
 
+alert("forcegraph")
+
 var w = 900,
     h = 700,
     node,

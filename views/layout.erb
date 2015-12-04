@@ -21,6 +21,29 @@
     <script type="text/javascript">
       google.load("visualization", "1", {packages: ["corechart"]});
      </script>
+     
+     <script>
+        [
+
+      'js/cookies.js',
+      'js/search_mechanics.js',
+      'js/graphing.js',
+      'js/helpers.js',
+      'js/presets.js',
+      'js/text_indent_browse.js',
+      'js/forceGraph_browse.js',
+      'js/customTabs.js',
+      'js/word_wrapping.js',
+       'js/main.js'
+    ].forEach(function(src) {
+      var script = document.createElement('script');
+      script.src = src;
+      script.async = false;
+      document.head.appendChild(script);
+    });
+    
+    </script>
+    
     <%= yield_content :head %>
     <%= erb :google_analytics if production? %>
    
