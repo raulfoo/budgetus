@@ -58,20 +58,16 @@ $(document).ready(function(){
   });
   
   $(".govtProgramsWrapper").on('mousedown', ".seeGraphs", function(){
-    console.log("triggering")
     if($(this).closest(".projectLevelWrap").find(".programDataBottomRow").css("display")!="none"){
     //if($(this).text() == "Hide"){
-      console.log("hiding")
       $(this).text("View More (Graphs)");
       $(this).closest(".projectLevelWrap").find(".programDataBottomRow").css("display","none");
       //$(this).text("View More (Graphs)");
     }else{
-      console.log("not hiding")
       $(this).text("Hide");
       $(this).closest(".projectLevelWrap").find(".programDataBottomRow").css("display","");
       //$(this).text("Hide");
     }
-    //alert("pause")
   });
   
   $("#hideBrowsing").click(function(){
