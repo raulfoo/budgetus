@@ -71,7 +71,7 @@ $(document).ready(function(){
       $(this).closest(".projectLevelWrap").find(".programDataBottomRow").css("display","");
       //$(this).text("Hide");
     }
-    alert("pause")
+    //alert("pause")
   });
   
   $("#hideBrowsing").click(function(){
