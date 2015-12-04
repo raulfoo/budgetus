@@ -21,7 +21,7 @@ copy maps from '/var/lib/postgresql/budgetus_tables/agencyLevelWithPrograms.txt'
 copy map_correlations from '/var/lib/postgresql/budgetus_tables/allCorrelations.txt' delimiters ',' csv;
 copy map_ranges from '/var/lib/postgresql/budgetus_tables/agencyFundingLevels.txt' delimiters ',' csv;
 copy programs from '/var/lib/postgresql/budgetus_tables/BudgetUs_Comprehensive.txt' delimiters ',' csv;
-copy unique_searches from '/var/lib/postgresql/budgetus_tables/Budget_Map/uniqueSearchesAll.txt' delimiters ',' csv;
+copy unique_searches from '/var/lib/postgresql/budgetus_tables/uniqueSearchesAll.txt' delimiters ',' csv;
 copy descriptions from '/var/lib/postgresql/budgetus_tables/Subfunction_descriptions.txt' delimiters ',' csv;
 
 
@@ -37,3 +37,6 @@ copy descriptions from '/var/lib/postgresql/budgetus_tables/Subfunction_descript
 --scp uniqueSearchesAll.txt root@budgetus.org:/var/lib/postgresql/budgetus_tables/uniqueSearchesAll.txt
 --scp Subfunction_descriptions.txt root@budgetus.org:/var/lib/postgresql/budgetus_tables/Subfunction_descriptions.txt
 --maybe missing agency description here---
+
+
+--do these commands from the postgres user from psql budgetus command line

@@ -60,10 +60,10 @@ alert("yes?")
   $(".govtProgramsWrapper").on('click', ".seeGraphs", function(){
    
     if($(this).text() == "Hide"){
-      $(this).closest(".projectLevelWrap").find(".programDataBottomRow").fadeOut("fast");
+      $(this).closest(".projectLevelWrap").find(".programDataBottomRow").fadeOut();
       $(this).text("View More (Graphs)");
     }else{
-      $(this).closest(".projectLevelWrap").find(".programDataBottomRow").fadeIn("fast");
+      $(this).closest(".projectLevelWrap").find(".programDataBottomRow").fadeIn();
       $(this).text("Hide");
     }
   });
